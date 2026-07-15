@@ -1,7 +1,14 @@
+const config = require("./config/env");
 const app = require("./app");
 
-const PORT = 5000;
+const PORT = config.PORT;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server is running on http://localhost:${PORT}`);
+  console.log(`
+========================================
+🚀 ExpenseFlow API is running
+🌍 Environment : ${config.NODE_ENV}
+📡 Server      : http://localhost:${PORT}
+========================================
+`);
 });
