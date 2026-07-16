@@ -1,6 +1,15 @@
 const User = require("../models/User");
-const { signupSchema } = require("../validators/authValidator");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 
+const {
+  signupSchema,
+  loginSchema,
+} = require("../validators/authValidator");
+
+// ==========================
+// Register User
+// ==========================
 const signup = async (req, res) => {
   try {
     // Validate request body
@@ -49,6 +58,76 @@ const signup = async (req, res) => {
   }
 };
 
+// ==========================
+// Login User
+// ==========================
+const login = async (req, res) => {
+  try {
+    // Validate request body
+    const { error } = loginSchema.validate(req.body);
+
+    if (error) {
+      return res.status(400).json({
+        success: false,
+        message: error.details[0].message,
+      });
+    }
+
+    const { email, password } = req.body;
+
+    // Find user and include password
+    const user = await User.findOne({ email }).select("+password");
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password.",
+      });
+    }
+
+    // Compare password
+    const isPasswordMatched = await bcrypt.compare(
+      password,
+      user.password
+    );
+
+    if (!isPasswordMatched) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid email or password.",
+      });
+    }
+
+    // Generate JWT Token
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: process.env.JWT_EXPIRES_IN,
+      }
+    );
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful.",
+      token,
+      data: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+      },
+    });
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
+
 module.exports = {
   signup,
+  login,
 };
