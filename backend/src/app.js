@@ -6,6 +6,7 @@ const config = require("./config/env");
 
 // Routes
 const authRoutes = require("./routes/authRoutes");
+const transactionRoutes = require("./routes/transactionRoutes");
 
 const app = express();
 
@@ -40,5 +41,8 @@ app.get("/api/v1/health", (req, res) => {
 
 // Authentication Routes
 app.use("/api/v1/auth", authRoutes);
+
+// Transaction Routes
+app.use("/api/v1/transactions", transactionRoutes);
 
 module.exports = app;
