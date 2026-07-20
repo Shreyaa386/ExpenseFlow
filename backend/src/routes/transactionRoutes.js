@@ -12,19 +12,19 @@ const {
   deleteTransaction,
 } = require("../controllers/transactionController");
 
-// Create
+// Add Transaction
 router.post("/", protect, addTransaction);
 
-// Read All
+// Get All Transactions
 router.get("/", protect, getAllTransactions);
 
-// Read One
+// Get Transaction By ID
 router.get("/:id", protect, getTransactionById);
 
-// Update
+// Update Transaction
 router.put("/:id", protect, updateTransaction);
 
-// Delete
+// Delete Transaction
 router.delete("/:id", protect, deleteTransaction);
 
 module.exports = router;

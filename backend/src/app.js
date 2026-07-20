@@ -7,6 +7,7 @@ const config = require("./config/env");
 // Routes
 const authRoutes = require("./routes/authRoutes");
 const transactionRoutes = require("./routes/transactionRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
 
 const app = express();
 
@@ -44,5 +45,8 @@ app.use("/api/v1/auth", authRoutes);
 
 // Transaction Routes
 app.use("/api/v1/transactions", transactionRoutes);
+
+// Dashboard Routes
+app.use("/api/v1/dashboard", dashboardRoutes);
 
 module.exports = app;

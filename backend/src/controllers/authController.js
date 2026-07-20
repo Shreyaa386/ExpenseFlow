@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const config = require("../config/env");
 
 const {
   signupSchema,
@@ -12,7 +13,6 @@ const {
 // ==========================
 const signup = async (req, res) => {
   try {
-    // Validate request body
     const { error } = signupSchema.validate(req.body);
 
     if (error) {
@@ -24,7 +24,6 @@ const signup = async (req, res) => {
 
     const { name, email, password } = req.body;
 
-    // Check if user already exists
     const existingUser = await User.findOne({ email });
 
     if (existingUser) {
@@ -34,7 +33,6 @@ const signup = async (req, res) => {
       });
     }
 
-    // Create new user
     const user = await User.create({
       name,
       email,
@@ -63,7 +61,6 @@ const signup = async (req, res) => {
 // ==========================
 const login = async (req, res) => {
   try {
-    // Validate request body
     const { error } = loginSchema.validate(req.body);
 
     if (error) {
@@ -75,7 +72,6 @@ const login = async (req, res) => {
 
     const { email, password } = req.body;
 
-    // Find user and include password
     const user = await User.findOne({ email }).select("+password");
 
     if (!user) {
@@ -85,7 +81,6 @@ const login = async (req, res) => {
       });
     }
 
-    // Compare password
     const isPasswordMatched = await bcrypt.compare(
       password,
       user.password
@@ -98,14 +93,13 @@ const login = async (req, res) => {
       });
     }
 
-    // Generate JWT Token
     const token = jwt.sign(
       {
         id: user._id,
       },
-      process.env.JWT_SECRET,
+      config.JWT_SECRET,
       {
-        expiresIn: process.env.JWT_EXPIRES_IN,
+        expiresIn: config.JWT_EXPIRES_IN,
       }
     );
 
