@@ -1,26 +1,18 @@
 const mongoose = require("mongoose");
+const dns = require("dns");
 const config = require("./env");
 
-// Connects the application to MongoDB Atlas
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
+
 const connectDB = async () => {
   try {
+    console.log("Mongo URI:", config.MONGODB_URI);
+
     const connection = await mongoose.connect(config.MONGODB_URI);
 
-    console.log(`
-========================================
-✅ MongoDB Connected Successfully
-📦 Database : ${connection.connection.name}
-🌐 Host     : ${connection.connection.host}
-========================================
-`);
+    console.log("Connected:", connection.connection.host);
   } catch (error) {
-    console.error(`
-========================================
-❌ MongoDB Connection Failed
-${error.message}
-========================================
-`);
-
+    console.error(error);
     process.exit(1);
   }
 };
