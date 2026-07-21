@@ -1,4 +1,5 @@
-import { forwardRef } from "react";
+import { forwardRef, useState } from "react";
+import { Eye, EyeOff } from "lucide-react";
 
 const Input = forwardRef(
   (
@@ -7,10 +8,15 @@ const Input = forwardRef(
       type = "text",
       placeholder,
       icon: Icon,
+      error,
       ...props
     },
     ref
   ) => {
+    const [showPassword, setShowPassword] = useState(false);
+
+    const isPassword = type === "password";
+
     return (
       <div>
         {label && (
@@ -19,7 +25,14 @@ const Input = forwardRef(
           </label>
         )}
 
-        <div className="flex items-center gap-3 rounded-xl border border-slate-300 bg-white px-4 py-3 transition focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500">
+        <div
+          className={`flex items-center gap-3 rounded-xl border bg-white px-4 py-3 transition
+          ${
+            error
+              ? "border-red-500"
+              : "border-slate-300 focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500"
+          }`}
+        >
           {Icon && (
             <Icon
               size={18}
@@ -29,12 +42,40 @@ const Input = forwardRef(
 
           <input
             ref={ref}
-            type={type}
+            type={
+              isPassword
+                ? showPassword
+                  ? "text"
+                  : "password"
+                : type
+            }
             placeholder={placeholder}
             className="flex-1 bg-transparent outline-none"
             {...props}
           />
+
+          {isPassword && (
+            <button
+              type="button"
+              onClick={() =>
+                setShowPassword(!showPassword)
+              }
+              className="text-slate-400 hover:text-slate-700"
+            >
+              {showPassword ? (
+                <EyeOff size={18} />
+              ) : (
+                <Eye size={18} />
+              )}
+            </button>
+          )}
         </div>
+
+        {error && (
+          <p className="mt-1 text-sm text-red-500">
+            {error}
+          </p>
+        )}
       </div>
     );
   }

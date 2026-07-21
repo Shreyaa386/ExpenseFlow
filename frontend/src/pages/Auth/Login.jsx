@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Mail, Lock } from "lucide-react";
 import { useForm } from "react-hook-form";
+import { useState } from "react";
 import toast from "react-hot-toast";
 
 import Button from "../../components/ui/Button";
@@ -12,8 +13,9 @@ import { useAuth } from "../../context/AuthContext";
 
 function Login() {
   const navigate = useNavigate();
-
   const { login } = useAuth();
+
+  const [loading, setLoading] = useState(false);
 
   const {
     register,
@@ -23,16 +25,25 @@ function Login() {
 
   const onSubmit = async (data) => {
     try {
+      setLoading(true);
+
       const response = await loginUser(data);
 
-      login(response.user, response.token);
+      console.log("Login Response:", response);
 
-      navigate("/");
+      login(response.data, response.token);
+
+      toast.success("Login Successful");
+
+      navigate("/", { replace: true });
     } catch (error) {
+      console.error(error);
+
       toast.error(
-        error.response?.data?.message ||
-          "Login Failed"
+        error.response?.data?.message || "Login Failed"
       );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -50,44 +61,30 @@ function Login() {
         onSubmit={handleSubmit(onSubmit)}
         className="space-y-5"
       >
-        <div>
-          <Input
-            label="Email"
-            type="email"
-            placeholder="Enter your email"
-            icon={Mail}
-            {...register("email", {
-              required: "Email is required",
-            })}
-          />
+        <Input
+          label="Email"
+          type="email"
+          placeholder="Enter your email"
+          icon={Mail}
+          error={errors.email?.message}
+          {...register("email", {
+            required: "Email is required",
+          })}
+        />
 
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.email.message}
-            </p>
-          )}
-        </div>
+        <Input
+          label="Password"
+          type="password"
+          placeholder="Enter your password"
+          icon={Lock}
+          error={errors.password?.message}
+          {...register("password", {
+            required: "Password is required",
+          })}
+        />
 
-        <div>
-          <Input
-            label="Password"
-            type="password"
-            placeholder="Enter your password"
-            icon={Lock}
-            {...register("password", {
-              required: "Password is required",
-            })}
-          />
-
-          {errors.password && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
-
-        <Button type="submit">
-          Login
+        <Button type="submit" disabled={loading}>
+          {loading ? "Logging in..." : "Login"}
         </Button>
       </form>
 

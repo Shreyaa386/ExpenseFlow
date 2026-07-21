@@ -8,6 +8,8 @@ import Signup from "../pages/Auth/Signup";
 
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Transactions from "../pages/Transactions/Transactions";
+import Categories from "../pages/Categories/Categories";
+import Analytics from "../pages/Analytics/Analytics";
 import Profile from "../pages/Profile/Profile";
 import NotFound from "../pages/NotFound/NotFound";
 
@@ -29,10 +31,9 @@ function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route element={<MainLayout />}>
           <Route path="/" element={<Dashboard />} />
-          <Route
-            path="/transactions"
-            element={<Transactions />}
-          />
+          <Route path="/transactions" element={<Transactions />} />
+          <Route path="/categories" element={<Categories />} />
+          <Route path="/analytics" element={<Analytics />} />
           <Route path="/profile" element={<Profile />} />
         </Route>
       </Route>
