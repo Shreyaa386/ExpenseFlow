@@ -27,13 +27,17 @@ function AuthProvider({ children }) {
       try {
         const response = await getCurrentUser();
 
-        setUser(response.user);
+        console.log("getCurrentUser Response:", response);
+
+        setUser(response.data);
 
         localStorage.setItem(
           "user",
-          JSON.stringify(response.user)
+          JSON.stringify(response.data)
         );
       } catch (error) {
+        console.error("Auth Error:", error);
+
         localStorage.removeItem("token");
         localStorage.removeItem("user");
 
@@ -48,6 +52,7 @@ function AuthProvider({ children }) {
 
   const login = (userData, token) => {
     localStorage.setItem("token", token);
+
     localStorage.setItem(
       "user",
       JSON.stringify(userData)
@@ -56,6 +61,15 @@ function AuthProvider({ children }) {
     setUser(userData);
 
     toast.success("Login Successful");
+  };
+
+  const updateUser = (userData) => {
+    localStorage.setItem(
+      "user",
+      JSON.stringify(userData)
+    );
+
+    setUser(userData);
   };
 
   const logout = () => {
@@ -73,6 +87,7 @@ function AuthProvider({ children }) {
         user,
         loading,
         login,
+        updateUser,
         logout,
         isAuthenticated: !!user,
       }}

@@ -39,13 +39,27 @@ const signup = async (req, res) => {
       password,
     });
 
+    // Generate JWT Token
+    const token = jwt.sign(
+      {
+        id: user._id,
+      },
+      config.JWT_SECRET,
+      {
+        expiresIn: config.JWT_EXPIRES_IN,
+      }
+    );
+
     return res.status(201).json({
       success: true,
-      message: "User registered successfully.",
+      message: "Account created successfully.",
+      token,
       data: {
         id: user._id,
         name: user.name,
         email: user.email,
+        language: user.language,
+        currency: user.currency,
       },
     });
   } catch (error) {
@@ -111,6 +125,8 @@ const login = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
+        language: user.language,
+        currency: user.currency,
       },
     });
   } catch (error) {

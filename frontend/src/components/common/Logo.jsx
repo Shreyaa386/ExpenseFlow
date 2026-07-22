@@ -6,19 +6,19 @@ function Logo({
   className = "",
 }) {
   const sizes = {
-    sm: {
-      width: "w-36",
-      tagline: "text-xs",
-    },
-    md: {
-      width: "w-52",
-      tagline: "text-sm",
-    },
-    lg: {
-      width: "w-72",
-      tagline: "text-base",
-    },
-  };
+  sm: {
+    width: "w-28",
+    tagline: "text-xs",
+  },
+  md: {
+    width: "w-44",
+    tagline: "text-sm",
+  },
+  lg: {
+    width: "w-56",
+    tagline: "text-base",
+  },
+};
 
   const currentSize = sizes[size] || sizes.md;
 

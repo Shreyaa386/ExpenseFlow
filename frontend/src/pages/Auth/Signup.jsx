@@ -9,9 +9,11 @@ import Card from "../../components/ui/Card";
 import Input from "../../components/ui/Input";
 
 import { signupUser } from "../../services/authService";
+import { useAuth } from "../../context/AuthContext";
 
 function Signup() {
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const [loading, setLoading] = useState(false);
 
@@ -30,14 +32,48 @@ function Signup() {
 
       const { confirmPassword, ...userData } = data;
 
-      await signupUser(userData);
+      console.log("========== SIGNUP START ==========");
+
+      const response = await signupUser(userData);
+
+      console.log("Signup Response:", response);
+      console.log("Response User:", response.data);
+      console.log("Response Token:", response.token);
+
+      login(response.data, response.token);
+
+      console.log("========== AFTER LOGIN ==========");
+      console.log("Stored Token:", localStorage.getItem("token"));
+      console.log(
+        "Stored User:",
+        JSON.parse(localStorage.getItem("user"))
+      );
 
       toast.success("Account created successfully 🎉");
 
-      navigate("/login");
+      console.log("Before Navigate:", window.location.pathname);
+      console.log("Navigating to /onboarding/welcome");
+
+      navigate("/onboarding/welcome");
+
+      setTimeout(() => {
+        console.log(
+          "Current Path After 500ms:",
+          window.location.pathname
+        );
+      }, 500);
+
+      setTimeout(() => {
+        console.log(
+          "Current Path After 2000ms:",
+          window.location.pathname
+        );
+      }, 2000);
     } catch (error) {
+      console.error("Signup Error:", error);
+
       toast.error(
-        error.response?.data?.message || "Signup Failed"
+        error?.response?.data?.message || "Signup Failed"
       );
     } finally {
       setLoading(false);

@@ -8,6 +8,7 @@ const config = require("./config/env");
 const authRoutes = require("./routes/authRoutes");
 const transactionRoutes = require("./routes/transactionRoutes");
 const dashboardRoutes = require("./routes/dashboardRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 const app = express();
 
@@ -42,6 +43,9 @@ app.get("/api/v1/health", (req, res) => {
 
 // Authentication Routes
 app.use("/api/v1/auth", authRoutes);
+
+// User Routes
+app.use("/api/v1/users", userRoutes);
 
 // Transaction Routes
 app.use("/api/v1/transactions", transactionRoutes);

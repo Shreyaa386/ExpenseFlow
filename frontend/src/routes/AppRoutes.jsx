@@ -2,9 +2,14 @@ import { Routes, Route } from "react-router-dom";
 
 import AuthLayout from "../layouts/AuthLayout";
 import MainLayout from "../layouts/MainLayout";
+import OnboardingLayout from "../layouts/OnboardingLayout";
 
 import Login from "../pages/Auth/Login";
 import Signup from "../pages/Auth/Signup";
+
+import Welcome from "../pages/Onboarding/Welcome";
+import Language from "../pages/Onboarding/Language";
+import Currency from "../pages/Onboarding/Currency";
 
 import Dashboard from "../pages/Dashboard/Dashboard";
 import Transactions from "../pages/Transactions/Transactions";
@@ -29,6 +34,24 @@ function AppRoutes() {
 
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
+
+        {/* Onboarding */}
+        <Route element={<OnboardingLayout />}>
+          <Route
+            path="/onboarding/welcome"
+            element={<Welcome />}
+          />
+          <Route
+            path="/onboarding/language"
+            element={<Language />}
+          />
+          <Route
+            path="/onboarding/currency"
+            element={<Currency />}
+          />
+        </Route>
+
+        {/* Main Application */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Dashboard />} />
           <Route path="/transactions" element={<Transactions />} />
