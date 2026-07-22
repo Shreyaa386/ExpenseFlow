@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { User, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { User, Mail, Lock } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { useState } from "react";
 import toast from "react-hot-toast";
@@ -14,8 +14,6 @@ function Signup() {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const {
     register,
@@ -34,7 +32,7 @@ function Signup() {
 
       await signupUser(userData);
 
-      toast.success("Account created successfully");
+      toast.success("Account created successfully 🎉");
 
       navigate("/login");
     } catch (error) {
@@ -47,137 +45,98 @@ function Signup() {
   };
 
   return (
-    <Card>
-      <h2 className="mb-2 text-center text-3xl font-bold text-slate-800">
-        Create Account
-      </h2>
+    <Card className="p-8">
+      <div className="mb-8 text-center">
+        <h1 className="text-4xl font-bold text-[#081B33]">
+          Create Account
+        </h1>
 
-      <p className="mb-8 text-center text-slate-500">
-        Create your ExpenseFlow account
-      </p>
+        <p className="mt-3 text-slate-500">
+          Start tracking your finances today.
+        </p>
+      </div>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-5"
+        className="space-y-6"
       >
-        <div>
-          <Input
-            label="Name"
-            type="text"
-            placeholder="Enter your name"
-            icon={User}
-            {...register("name", {
-              required: "Name is required",
-              minLength: {
-                value: 3,
-                message: "Minimum 3 characters",
-              },
-            })}
-          />
+        <Input
+          label="Full Name"
+          type="text"
+          placeholder="Enter your full name"
+          icon={User}
+          error={errors.name?.message}
+          {...register("name", {
+            required: "Name is required",
+            minLength: {
+              value: 3,
+              message: "Minimum 3 characters",
+            },
+          })}
+        />
 
-          {errors.name && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.name.message}
-            </p>
-          )}
-        </div>
+        <Input
+          label="Email"
+          type="email"
+          placeholder="Enter your email"
+          icon={Mail}
+          error={errors.email?.message}
+          {...register("email", {
+            required: "Email is required",
+            pattern: {
+              value: /^\S+@\S+$/i,
+              message: "Enter a valid email address",
+            },
+          })}
+        />
 
-        <div>
-          <Input
-            label="Email"
-            type="email"
-            placeholder="Enter your email"
-            icon={Mail}
-            {...register("email", {
-              required: "Email is required",
-            })}
-          />
+        <Input
+          label="Password"
+          type="password"
+          placeholder="Create a password"
+          icon={Lock}
+          error={errors.password?.message}
+          {...register("password", {
+            required: "Password is required",
+            minLength: {
+              value: 8,
+              message: "Password must be at least 8 characters",
+            },
+          })}
+        />
 
-          {errors.email && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.email.message}
-            </p>
-          )}
-        </div>
+        <Input
+          label="Confirm Password"
+          type="password"
+          placeholder="Confirm your password"
+          icon={Lock}
+          error={errors.confirmPassword?.message}
+          {...register("confirmPassword", {
+            required: "Confirm Password is required",
+            validate: (value) =>
+              value === password || "Passwords do not match",
+          })}
+        />
 
-        <div className="relative">
-          <Input
-            label="Password"
-            type={showPassword ? "text" : "password"}
-            placeholder="Enter password"
-            icon={Lock}
-            {...register("password", {
-              required: "Password is required",
-              minLength: {
-                value: 8,
-                message: "Minimum 8 characters",
-              },
-            })}
-          />
-
-          <button
-            type="button"
-            onClick={() => setShowPassword(!showPassword)}
-            className="absolute right-3 top-10"
-          >
-            {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-          </button>
-
-          {errors.password && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
-
-        <div className="relative">
-          <Input
-            label="Confirm Password"
-            type={showConfirmPassword ? "text" : "password"}
-            placeholder="Confirm password"
-            icon={Lock}
-            {...register("confirmPassword", {
-              required: "Confirm Password is required",
-              validate: (value) =>
-                value === password || "Passwords do not match",
-            })}
-          />
-
-          <button
-            type="button"
-            onClick={() =>
-              setShowConfirmPassword(!showConfirmPassword)
-            }
-            className="absolute right-3 top-10"
-          >
-            {showConfirmPassword ? (
-              <EyeOff size={20} />
-            ) : (
-              <Eye size={20} />
-            )}
-          </button>
-
-          {errors.confirmPassword && (
-            <p className="mt-1 text-sm text-red-500">
-              {errors.confirmPassword.message}
-            </p>
-          )}
-        </div>
-
-        <Button type="submit" disabled={loading}>
-          {loading ? "Creating Account..." : "Sign Up"}
+        <Button
+          type="submit"
+          loading={loading}
+        >
+          Create Account
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-slate-600">
-        Already have an account?{" "}
-        <Link
-          to="/login"
-          className="font-semibold text-blue-600 hover:underline"
-        >
-          Login
-        </Link>
-      </p>
+      <div className="mt-8 border-t border-slate-200 pt-6 text-center">
+        <p className="text-slate-600">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="font-semibold text-[#12C29D] transition-colors hover:text-[#0E9F82]"
+          >
+            Login
+          </Link>
+        </p>
+      </div>
     </Card>
   );
 }

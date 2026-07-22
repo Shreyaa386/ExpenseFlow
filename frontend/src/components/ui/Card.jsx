@@ -1,6 +1,19 @@
-function Card({ children }) {
+function Card({ children, className = "" }) {
   return (
-    <div className="w-full rounded-3xl border border-white/50 bg-white/90 p-8 shadow-2xl backdrop-blur-md">
+    <div
+      className={`
+        w-full
+        rounded-3xl
+        border
+        border-slate-200
+        bg-white
+        shadow-sm
+        transition-all
+        duration-300
+        hover:shadow-lg
+        ${className}
+      `}
+    >
       {children}
     </div>
   );

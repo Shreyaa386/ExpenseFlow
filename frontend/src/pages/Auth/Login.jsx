@@ -29,16 +29,12 @@ function Login() {
 
       const response = await loginUser(data);
 
-      console.log("Login Response:", response);
-
       login(response.data, response.token);
 
-      toast.success("Login Successful");
+      toast.success("Welcome Back 👋");
 
       navigate("/", { replace: true });
     } catch (error) {
-      console.error(error);
-
       toast.error(
         error.response?.data?.message || "Login Failed"
       );
@@ -48,18 +44,20 @@ function Login() {
   };
 
   return (
-    <Card>
-      <h2 className="mb-2 text-center text-3xl font-bold text-slate-800">
-        Welcome Back
-      </h2>
+    <Card className="p-8">
+      <div className="mb-8 text-center">
+        <h1 className="text-4xl font-bold text-[#081B33]">
+          Welcome Back 👋
+        </h1>
 
-      <p className="mb-8 text-center text-slate-500">
-        Login to continue to your account
-      </p>
+        <p className="mt-3 text-slate-500">
+          Login to continue to your account
+        </p>
+      </div>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="space-y-5"
+        className="space-y-6"
       >
         <Input
           label="Email"
@@ -69,6 +67,10 @@ function Login() {
           error={errors.email?.message}
           {...register("email", {
             required: "Email is required",
+            pattern: {
+              value: /^\S+@\S+$/i,
+              message: "Enter a valid email address",
+            },
           })}
         />
 
@@ -80,23 +82,32 @@ function Login() {
           error={errors.password?.message}
           {...register("password", {
             required: "Password is required",
+            minLength: {
+              value: 6,
+              message: "Password must be at least 6 characters",
+            },
           })}
         />
 
-        <Button type="submit" disabled={loading}>
-          {loading ? "Logging in..." : "Login"}
+        <Button
+          type="submit"
+          loading={loading}
+        >
+          Login
         </Button>
       </form>
 
-      <p className="mt-6 text-center text-sm text-slate-600">
-        Don't have an account?{" "}
-        <Link
-          to="/signup"
-          className="font-semibold text-blue-600 hover:underline"
-        >
-          Sign Up
-        </Link>
-      </p>
+      <div className="mt-8 border-t border-slate-200 pt-6 text-center">
+        <p className="text-slate-600">
+          Don't have an account?{" "}
+          <Link
+            to="/signup"
+            className="font-semibold text-[#12C29D] transition-colors hover:text-[#0E9F82]"
+          >
+            Sign Up
+          </Link>
+        </p>
+      </div>
     </Card>
   );
 }

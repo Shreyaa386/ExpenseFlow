@@ -1,19 +1,17 @@
 import { Outlet } from "react-router-dom";
-import Logo from "../components/ui/Logo";
+import Logo from "../components/common/Logo";
 
 function AuthLayout() {
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 px-4">
-      
-      {/* Background Blur Circles */}
-      <div className="absolute -top-24 -left-24 h-72 w-72 rounded-full bg-blue-300 opacity-20 blur-3xl"></div>
+    <div className="min-h-screen bg-slate-50">
+      <div className="mx-auto flex min-h-screen w-full max-w-6xl items-center justify-center px-6 py-12">
+        <div className="w-full max-w-md">
+          {/* Logo */}
+          <div className="mb-10 flex justify-center">
+            <Logo size="lg" />
+          </div>
 
-      <div className="absolute -bottom-24 -right-24 h-72 w-72 rounded-full bg-cyan-300 opacity-20 blur-3xl"></div>
-
-      <div className="relative z-10 flex w-full max-w-md flex-col items-center">
-        <Logo />
-
-        <div className="mt-8 w-full">
+          {/* Login / Signup Form */}
           <Outlet />
         </div>
       </div>
