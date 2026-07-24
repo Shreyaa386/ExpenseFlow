@@ -1,4 +1,4 @@
-import logo from "../../assets/images/expenseflow-logo.jpeg";
+import logo from "../../assets/images/expenseflow-logo.png";
 
 function Logo({
   size = "md",

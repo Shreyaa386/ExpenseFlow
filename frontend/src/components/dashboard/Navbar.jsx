@@ -1,46 +1,80 @@
-import { Bell, Search, UserCircle2 } from "lucide-react";
+import { Bell, UserCircle2 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { useLocation } from "react-router-dom";
 
 function Navbar() {
   const { user } = useAuth();
+  const { pathname } = useLocation();
+
+  const pageData = {
+    "/dashboard": {
+      title: "Welcome Back 👋",
+      subtitle: "Manage your expenses and income effortlessly.",
+    },
+    "/transactions": {
+      title: "Transactions",
+      subtitle: "Track and manage all your income and expenses.",
+    },
+    "/categories": {
+      title: "Categories",
+      subtitle: "Organize your income and expense categories.",
+    },
+    "/analytics": {
+      title: "Analytics",
+      subtitle: "Understand your financial trends and insights.",
+    },
+    "/profile": {
+      title: "Profile",
+      subtitle: "Manage your account settings.",
+    },
+  };
+
+  const currentPage =
+    pageData[pathname] || {
+      title: "ExpenseFlow",
+      subtitle: "Manage your finances smarter.",
+    };
 
   return (
-    <header className="mb-8 flex items-center justify-between rounded-2xl border border-white/10 bg-slate-900/70 px-8 py-5 backdrop-blur-xl">
+    <header className="flex items-center justify-between border-b border-slate-800 px-10 py-6">
+      {/* Left */}
+
       <div>
-        <h1 className="text-3xl font-bold text-white">
-          Welcome, {user?.name?.split(" ")[0]} 👋
+        <h1 className="text-4xl font-bold tracking-tight text-white">
+          {currentPage.title}
         </h1>
 
-        <p className="mt-1 text-slate-400">
-          Manage your finances smarter with ExpenseFlow.
+        <p className="mt-2 text-base text-slate-400">
+          {currentPage.subtitle}
         </p>
       </div>
 
+      {/* Right */}
+
       <div className="flex items-center gap-5">
-        {/* Search */}
-        <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-slate-800 px-4 py-3">
-          <Search size={18} className="text-slate-400" />
-
-          <input
-            type="text"
-            placeholder="Search..."
-            className="w-52 bg-transparent text-white placeholder:text-slate-500 focus:outline-none"
+        <button className="relative flex h-12 w-12 items-center justify-center rounded-2xl border border-slate-700 bg-slate-900 transition hover:border-slate-600">
+          <Bell
+            size={20}
+            className="text-slate-300"
           />
-        </div>
 
-        {/* Notification */}
-        <button className="rounded-xl border border-white/10 bg-slate-800 p-3 transition hover:bg-slate-700">
-          <Bell className="text-white" size={20} />
+          <span className="absolute right-3 top-3 h-2.5 w-2.5 rounded-full bg-red-500"></span>
         </button>
 
-        {/* Profile */}
-        <div className="flex items-center gap-3 rounded-xl border border-white/10 bg-slate-800 px-4 py-2">
-          <UserCircle2 size={42} className="text-indigo-400" />
+        <div className="flex items-center gap-4 rounded-2xl border border-slate-700 bg-slate-900 px-4 py-3">
+          <UserCircle2
+            size={46}
+            className="text-indigo-400"
+          />
 
           <div>
-            <p className="font-semibold text-white">{user?.name}</p>
+            <h3 className="text-base font-semibold text-white">
+              {user?.name}
+            </h3>
 
-            <p className="text-sm text-slate-400">{user?.email}</p>
+            <p className="text-sm text-slate-400">
+              {user?.email}
+            </p>
           </div>
         </div>
       </div>
