@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Plus } from "lucide-react";
 import toast from "react-hot-toast";
@@ -8,16 +8,17 @@ import TransactionTable from "../../components/transactions/TransactionTable";
 import DeleteTransactionModal from "../../components/transactions/DeleteTransactionModal";
 import TransactionFilters from "../../components/transactions/TransactionFilters";
 
-import {
-  getTransactions,
-  deleteTransaction,
-} from "../../services/transactionService";
+import { deleteTransaction } from "../../services/transactionService";
+import { useTransactions } from "../../context/TransactionContext";
 
 function Transactions() {
   const navigate = useNavigate();
 
-  const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const {
+    transactions,
+    loading,
+    fetchTransactions,
+  } = useTransactions();
 
   // Filters
   const [search, setSearch] = useState("");
@@ -31,22 +32,6 @@ function Transactions() {
     useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
 
-  useEffect(() => {
-    fetchTransactions();
-  }, []);
-
-  const fetchTransactions = async () => {
-    try {
-      const data = await getTransactions();
-      setTransactions(data);
-    } catch (error) {
-      toast.error("Failed to load transactions");
-      console.error(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   const handleDelete = (id) => {
     setSelectedTransactionId(id);
     setDeleteModalOpen(true);
@@ -58,14 +43,9 @@ function Transactions() {
 
       await deleteTransaction(selectedTransactionId);
 
-      toast.success("Transaction deleted successfully");
+      await fetchTransactions();
 
-      setTransactions((prev) =>
-        prev.filter(
-          (transaction) =>
-            transaction._id !== selectedTransactionId
-        )
-      );
+      toast.success("Transaction deleted successfully");
 
       setDeleteModalOpen(false);
       setSelectedTransactionId(null);
@@ -80,10 +60,6 @@ function Transactions() {
   const handleEdit = (transaction) => {
     navigate(`/transactions/edit/${transaction._id}`);
   };
-
-  // ==========================
-  // Filter Logic
-  // ==========================
 
   const filteredTransactions = useMemo(() => {
     let data = [...transactions];
@@ -163,7 +139,6 @@ function Transactions() {
         </div>
 
         {/* Filters */}
-
         <TransactionFilters
           search={search}
           setSearch={setSearch}
@@ -175,8 +150,7 @@ function Transactions() {
           setSort={setSort}
         />
 
-        {/* Table */}
-
+        {/* Transactions Table */}
         <TransactionTable
           transactions={filteredTransactions}
           onEdit={handleEdit}

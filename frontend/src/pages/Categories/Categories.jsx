@@ -11,8 +11,9 @@ import {
 } from "lucide-react";
 
 import CategoryCard from "./CategoryCard";
+import AddCategoryModal from "./AddCategoryModal";
 
-const categories = [
+const initialCategories = [
   {
     id: 1,
     name: "Food",
@@ -70,8 +71,10 @@ const categories = [
 ];
 
 function Categories() {
+  const [categories, setCategories] = useState(initialCategories);
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("All");
+  const [showAddModal, setShowAddModal] = useState(false);
 
   const filteredCategories = categories.filter((category) => {
     const matchesSearch = category.name
@@ -84,65 +87,86 @@ function Categories() {
     return matchesSearch && matchesFilter;
   });
 
+  const handleSaveCategory = (newCategory) => {
+    const category = {
+      id: Date.now(),
+      transactions: 0,
+      ...newCategory,
+    };
+
+    setCategories((prev) => [category, ...prev]);
+  };
+
   return (
-    <div className="flex flex-col gap-8">
-      {/* Toolbar */}
-      {/* Toolbar */}
+    <>
+      <div className="flex flex-col gap-8">
+        {/* Toolbar */}
 
-<div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
+        <div className="flex flex-col gap-6 xl:flex-row xl:items-center xl:justify-between">
+          <div className="w-full xl:w-[72%]">
+            <div className="flex h-14 items-center gap-3 rounded-2xl border border-slate-700 bg-slate-900 px-5">
+              <Search
+                size={20}
+                className="text-slate-500"
+              />
 
-  <div className="w-full xl:w-[72%]">
-    <div className="flex h-14 items-center gap-3 rounded-2xl border border-slate-700 bg-slate-900 px-5">
-      <Search
-        size={20}
-        className="text-slate-500"
-      />
+              <input
+                type="text"
+                placeholder="Search categories..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="w-full bg-transparent text-white placeholder:text-slate-500 outline-none"
+              />
+            </div>
+          </div>
 
-      <input
-        type="text"
-        placeholder="Search categories..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full bg-transparent text-white placeholder:text-slate-500 outline-none"
-      />
-    </div>
-  </div>
-
-  <button className="flex h-14 items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-8 font-medium text-white transition hover:bg-indigo-500">
-    <Plus size={20} />
-    Add Category
-  </button>
-
-</div>
-      {/* Filters */}
-      <div className="flex flex-wrap gap-3">
-        {["All", "Income", "Expense"].map((item) => (
           <button
-            key={item}
-            onClick={() => setFilter(item)}
-            className={`rounded-full px-5 py-2 text-sm font-medium transition ${
-              filter === item
-                ? "bg-indigo-600 text-white"
-                : "border border-slate-700 bg-slate-900 text-slate-400 hover:border-indigo-500 hover:text-white"
-            }`}
+            onClick={() => setShowAddModal(true)}
+            className="flex h-14 items-center justify-center gap-2 rounded-2xl bg-indigo-600 px-8 font-medium text-white transition hover:bg-indigo-500"
           >
-            {item}
+            <Plus size={20} />
+            Add Category
           </button>
-        ))}
+        </div>
+
+        {/* Filters */}
+
+        <div className="flex flex-wrap gap-3">
+          {["All", "Income", "Expense"].map((item) => (
+            <button
+              key={item}
+              onClick={() => setFilter(item)}
+              className={`rounded-full px-5 py-2 text-sm font-medium transition ${
+                filter === item
+                  ? "bg-indigo-600 text-white"
+                  : "border border-slate-700 bg-slate-900 text-slate-400 hover:border-indigo-500 hover:text-white"
+              }`}
+            >
+              {item}
+            </button>
+          ))}
+        </div>
+
+        {/* Cards */}
+
+        <div className="grid grid-cols-1 gap-12 xl:grid-cols-2">
+          {filteredCategories.map((category) => (
+            <CategoryCard
+              key={category.id}
+              category={category}
+              onEdit={() => {}}
+              onDelete={() => {}}
+            />
+          ))}
+        </div>
       </div>
 
-      {/* Cards */}
-      <div className="grid grid-cols-1 gap-12 xl:grid-cols-2">
-        {filteredCategories.map((category) => (
-          <CategoryCard
-            key={category.id}
-            category={category}
-            onEdit={() => {}}
-            onDelete={() => {}}
-          />
-        ))}
-      </div>
-    </div>
+      <AddCategoryModal
+        open={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onSave={handleSaveCategory}
+      />
+    </>
   );
 }
 

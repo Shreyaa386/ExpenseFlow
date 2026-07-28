@@ -5,26 +5,30 @@ import { Toaster } from "react-hot-toast";
 
 import "./index.css";
 import App from "./App";
+
 import AuthProvider from "./context/AuthContext";
+import { TransactionProvider } from "./context/TransactionContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
       <AuthProvider>
-        <App />
+        <TransactionProvider>
+          <App />
 
-        <Toaster
-          position="top-right"
-          reverseOrder={false}
-          toastOptions={{
-            duration: 3000,
-            style: {
-              borderRadius: "10px",
-              background: "#fff",
-              color: "#1e293b",
-            },
-          }}
-        />
+          <Toaster
+            position="top-right"
+            reverseOrder={false}
+            toastOptions={{
+              duration: 3000,
+              style: {
+                borderRadius: "10px",
+                background: "#fff",
+                color: "#1e293b",
+              },
+            }}
+          />
+        </TransactionProvider>
       </AuthProvider>
     </BrowserRouter>
   </StrictMode>
