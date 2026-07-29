@@ -65,10 +65,31 @@ const userSchema = new mongoose.Schema(
     },
 
     theme: {
-      type: String,
-      default: "light",
-    },
+  type: String,
+  enum: ["light", "dark", "system"],
+  default: "system",
+},
+notifications: {
+  emailNotifications: {
+    type: Boolean,
+    default: true,
+  },
 
+  budgetAlerts: {
+    type: Boolean,
+    default: true,
+  },
+
+  monthlyReports: {
+    type: Boolean,
+    default: true,
+  },
+
+  weeklySummary: {
+    type: Boolean,
+    default: false,
+  },
+},
     monthlyIncome: {
       type: Number,
       default: 0,

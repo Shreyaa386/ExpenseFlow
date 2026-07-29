@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 * {
   margin: 0;
   padding: 0;
@@ -15,6 +17,4 @@ body,
 
 body {
   font-family: "Inter", sans-serif;
-  background: #020617;
-  color: #ffffff;
 }

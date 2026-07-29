@@ -26,6 +26,9 @@ import NotFound from "../pages/NotFound/NotFound";
 import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 
+import Settings from "../pages/Settings/Settings";
+
+
 function AppRoutes() {
   return (
     <Routes>
@@ -90,6 +93,12 @@ function AppRoutes() {
             path="/profile"
             element={<Profile />}
           />
+
+          <Route 
+          path="/settings"
+           element={<Settings />}
+            />
+
         </Route>
       </Route>
 

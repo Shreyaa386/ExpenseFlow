@@ -39,7 +39,6 @@ const signup = async (req, res) => {
       password,
     });
 
-    // Generate JWT Token
     const token = jwt.sign(
       {
         id: user._id,
@@ -63,6 +62,8 @@ const signup = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("Signup Error:", error);
+
     return res.status(500).json({
       success: false,
       message: error.message,
@@ -86,7 +87,13 @@ const login = async (req, res) => {
 
     const { email, password } = req.body;
 
+    console.log("====================================");
+    console.log("LOGIN ATTEMPT");
+    console.log("Email:", email);
+
     const user = await User.findOne({ email }).select("+password");
+
+    console.log("User Found:", !!user);
 
     if (!user) {
       return res.status(401).json({
@@ -99,6 +106,8 @@ const login = async (req, res) => {
       password,
       user.password
     );
+
+    console.log("Password Matched:", isPasswordMatched);
 
     if (!isPasswordMatched) {
       return res.status(401).json({
@@ -117,6 +126,8 @@ const login = async (req, res) => {
       }
     );
 
+    console.log("JWT Generated Successfully");
+
     return res.status(200).json({
       success: true,
       message: "Login successful.",
@@ -130,6 +141,8 @@ const login = async (req, res) => {
       },
     });
   } catch (error) {
+    console.error("Login Error:", error);
+
     return res.status(500).json({
       success: false,
       message: error.message,
@@ -148,6 +161,8 @@ const getMe = async (req, res) => {
       data: req.user,
     });
   } catch (error) {
+    console.error("Get Me Error:", error);
+
     return res.status(500).json({
       success: false,
       message: error.message,
@@ -165,6 +180,8 @@ const logout = async (req, res) => {
       message: "Logout successful.",
     });
   } catch (error) {
+    console.error("Logout Error:", error);
+
     return res.status(500).json({
       success: false,
       message: error.message,

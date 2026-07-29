@@ -8,28 +8,31 @@ import App from "./App";
 
 import AuthProvider from "./context/AuthContext";
 import { TransactionProvider } from "./context/TransactionContext";
+import { ThemeProvider } from "./context/ThemeContext";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <BrowserRouter>
-      <AuthProvider>
-        <TransactionProvider>
-          <App />
+      <ThemeProvider>
+        <AuthProvider>
+          <TransactionProvider>
+            <App />
 
-          <Toaster
-            position="top-right"
-            reverseOrder={false}
-            toastOptions={{
-              duration: 3000,
-              style: {
-                borderRadius: "10px",
-                background: "#fff",
-                color: "#1e293b",
-              },
-            }}
-          />
-        </TransactionProvider>
-      </AuthProvider>
+            <Toaster
+              position="top-right"
+              reverseOrder={false}
+              toastOptions={{
+                duration: 3000,
+                style: {
+                  borderRadius: "10px",
+                  background: "#fff",
+                  color: "#1e293b",
+                },
+              }}
+            />
+          </TransactionProvider>
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   </StrictMode>
 );

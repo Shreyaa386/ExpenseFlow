@@ -28,10 +28,10 @@ app.use(
 );
 
 // ==============================
-// Routes
+// API Routes
 // ==============================
 
-// Health Check Route
+// Health Check
 app.get("/api/v1/health", (req, res) => {
   res.status(200).json({
     success: true,
@@ -41,16 +41,27 @@ app.get("/api/v1/health", (req, res) => {
   });
 });
 
-// Authentication Routes
+// Authentication
 app.use("/api/v1/auth", authRoutes);
 
-// User Routes
+// Users
 app.use("/api/v1/users", userRoutes);
 
-// Transaction Routes
+// Transactions
 app.use("/api/v1/transactions", transactionRoutes);
 
-// Dashboard Routes
+// Dashboard
 app.use("/api/v1/dashboard", dashboardRoutes);
+
+// ==============================
+// 404 Route
+// ==============================
+
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: `Route not found: ${req.originalUrl}`,
+  });
+});
 
 module.exports = app;

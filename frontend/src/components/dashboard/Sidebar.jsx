@@ -4,6 +4,7 @@ import {
   Tags,
   ChartColumn,
   User,
+  Settings,
   LogOut,
   Search,
 } from "lucide-react";
@@ -13,10 +14,10 @@ import logo from "../../assets/images/expenseflow-logo.png";
 
 const menuItems = [
   {
-  title: "Dashboard",
-  icon: LayoutDashboard,
-  path: "/",
-},
+    title: "Dashboard",
+    icon: LayoutDashboard,
+    path: "/",
+  },
   {
     title: "Transactions",
     icon: Receipt,
@@ -36,6 +37,11 @@ const menuItems = [
     title: "Profile",
     icon: User,
     path: "/profile",
+  },
+  {
+    title: "Settings",
+    icon: Settings,
+    path: "/settings",
   },
 ];
 
