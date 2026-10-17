@@ -35,6 +35,18 @@ function AuthProvider({ children }) {
           "user",
           JSON.stringify(response.data)
         );
+
+        if (
+          response.data?.theme &&
+          ["light", "dark", "system"].includes(response.data.theme)
+        ) {
+          localStorage.setItem("theme", response.data.theme);
+          window.dispatchEvent(
+            new CustomEvent("expenseflow-theme-sync", {
+              detail: response.data.theme,
+            })
+          );
+        }
       } catch (error) {
         console.error("Auth Error:", error);
 
@@ -60,6 +72,18 @@ function AuthProvider({ children }) {
 
     setUser(userData);
 
+    if (
+      userData?.theme &&
+      ["light", "dark", "system"].includes(userData.theme)
+    ) {
+      localStorage.setItem("theme", userData.theme);
+      window.dispatchEvent(
+        new CustomEvent("expenseflow-theme-sync", {
+          detail: userData.theme,
+        })
+      );
+    }
+
     toast.success("Login Successful");
   };
 
@@ -70,6 +94,18 @@ function AuthProvider({ children }) {
     );
 
     setUser(userData);
+
+    if (
+      userData?.theme &&
+      ["light", "dark", "system"].includes(userData.theme)
+    ) {
+      localStorage.setItem("theme", userData.theme);
+      window.dispatchEvent(
+        new CustomEvent("expenseflow-theme-sync", {
+          detail: userData.theme,
+        })
+      );
+    }
   };
 
   const logout = () => {

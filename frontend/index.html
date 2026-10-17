@@ -29,6 +29,24 @@
     />
 
     <title>ExpenseFlow</title>
+
+    <script>
+      (function () {
+        try {
+          var saved = localStorage.getItem("theme") || "system";
+          var isDark =
+            saved === "dark" ||
+            (saved === "system" &&
+              window.matchMedia &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          var root = document.documentElement;
+          root.classList.remove("light", "dark");
+          root.classList.add(isDark ? "dark" : "light");
+          root.setAttribute("data-theme", isDark ? "dark" : "light");
+          root.style.colorScheme = isDark ? "dark" : "light";
+        } catch (e) {}
+      })();
+    </script>
   </head>
 
   <body>

@@ -1,27 +1,15 @@
 import { Outlet } from "react-router-dom";
-
 import Logo from "../components/common/Logo";
 
 function OnboardingLayout() {
   return (
-    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-gradient-to-br from-[#F8FAFC] via-white to-[#ECFDF5] px-6 py-10">
-      {/* Background Blur */}
-      <div className="absolute -top-28 -left-24 h-72 w-72 rounded-full bg-[#12C29D]/10 blur-3xl"></div>
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-[#F8F7F0] px-4 sm:px-6 py-10 text-[#102A2A]">
+      {/* Background Glows */}
+      <div className="pointer-events-none absolute -top-28 -left-24 h-80 w-80 rounded-full bg-[#104E42]/5 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-28 -right-24 h-96 w-96 rounded-full bg-[#D99016]/8 blur-3xl" />
 
-      <div className="absolute -bottom-28 -right-24 h-80 w-80 rounded-full bg-[#0E9F82]/10 blur-3xl"></div>
-
-      {/* Grid */}
-      <div
-        className="absolute inset-0 opacity-[0.04]"
-        style={{
-          backgroundImage:
-            "linear-gradient(#081B33 1px, transparent 1px), linear-gradient(90deg, #081B33 1px, transparent 1px)",
-          backgroundSize: "40px 40px",
-        }}
-      />
-
-      <div className="relative z-10 w-full max-w-xl rounded-3xl border border-slate-200 bg-white/90 p-10 shadow-2xl backdrop-blur-md">
-        <div className="mb-10 flex justify-center">
+      <div className="relative z-10 w-full max-w-xl rounded-3xl border border-[#E8E7DE] bg-[#FFFDF8] p-6 sm:p-10 shadow-[0_12px_40px_rgba(16,78,66,0.06)]">
+        <div className="mb-8 flex justify-center">
           <Logo size="md" showTagline={false} />
         </div>
 

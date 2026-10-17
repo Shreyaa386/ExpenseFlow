@@ -87,13 +87,7 @@ const login = async (req, res) => {
 
     const { email, password } = req.body;
 
-    console.log("====================================");
-    console.log("LOGIN ATTEMPT");
-    console.log("Email:", email);
-
     const user = await User.findOne({ email }).select("+password");
-
-    console.log("User Found:", !!user);
 
     if (!user) {
       return res.status(401).json({
@@ -106,8 +100,6 @@ const login = async (req, res) => {
       password,
       user.password
     );
-
-    console.log("Password Matched:", isPasswordMatched);
 
     if (!isPasswordMatched) {
       return res.status(401).json({
@@ -125,8 +117,6 @@ const login = async (req, res) => {
         expiresIn: config.JWT_EXPIRES_IN,
       }
     );
-
-    console.log("JWT Generated Successfully");
 
     return res.status(200).json({
       success: true,

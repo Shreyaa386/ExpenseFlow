@@ -89,27 +89,27 @@ function Currency() {
     <div>
       {/* Progress */}
       <div className="mb-8">
-        <div className="mb-2 flex items-center justify-between text-sm text-slate-500">
+        <div className="mb-2 flex items-center justify-between text-sm text-[#66736E]">
           <span>Step 2 of 2</span>
           <span>100%</span>
         </div>
 
-        <div className="h-2 rounded-full bg-slate-200">
-          <div className="h-full w-full rounded-full bg-[#12C29D]" />
+        <div className="h-2 rounded-full bg-[#E8E7DE]">
+          <div className="h-full w-full rounded-full bg-[#104E42]" />
         </div>
       </div>
 
       {/* Heading */}
       <div className="mb-10 text-center">
-        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#12C29D]/10">
-          <DollarSign className="h-8 w-8 text-[#12C29D]" />
+        <div className="mx-auto mb-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#104E42]/10">
+          <DollarSign className="h-8 w-8 text-[#104E42]" />
         </div>
 
-        <h1 className="text-3xl font-bold text-[#081B33]">
+        <h1 className="text-3xl font-bold text-[#102A2A]">
           Choose Your Currency
         </h1>
 
-        <p className="mt-3 text-slate-500">
+        <p className="mt-3 text-sm text-[#66736E]">
           Select the currency used for all your expenses and income.
         </p>
       </div>
@@ -129,26 +129,26 @@ function Currency() {
               }}
               className={`flex w-full items-center justify-between rounded-2xl border p-5 transition-all duration-200 ${
                 selected
-                  ? "border-[#12C29D] bg-[#12C29D]/10 shadow-md"
-                  : "border-slate-200 bg-white hover:border-[#12C29D]/40 hover:shadow"
+                  ? "border-[#104E42] bg-[#104E42]/10 shadow-sm"
+                  : "border-[#E8E7DE] bg-[#F8F7F0] hover:border-[#D5D3C8] hover:bg-[#F3F1E7]"
               }`}
             >
               <div className="flex items-center gap-4">
                 <span className="text-3xl">{currency.flag}</span>
 
                 <div className="text-left">
-                  <h3 className="font-semibold text-[#081B33]">
+                  <h3 className="font-bold text-[#102A2A]">
                     {currency.name}
                   </h3>
 
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-[#66736E]">
                     {currency.symbol} ({currency.code})
                   </p>
                 </div>
               </div>
 
               {selected && (
-                <CheckCircle className="h-6 w-6 text-[#12C29D]" />
+                <CheckCircle className="h-6 w-6 text-[#104E42]" />
               )}
             </button>
           );

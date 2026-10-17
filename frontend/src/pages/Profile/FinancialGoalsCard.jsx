@@ -1,3 +1,8 @@
+import { DollarSign, Target, Save } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../components/ui/Card";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/Button";
+
 function FinancialGoalsCard({
   monthlyIncome,
   monthlySavingGoal,
@@ -6,51 +11,51 @@ function FinancialGoalsCard({
   loading,
 }) {
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md border border-gray-200 dark:border-gray-800 p-6">
-      <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-        Financial Goals
-      </h2>
+    <Card className="p-5 sm:p-6 flex flex-col justify-between h-full">
+      <div>
+        <CardHeader className="pb-3 border-b border-[#E8E7DE]">
+          <div>
+            <CardTitle>Financial Targets</CardTitle>
+            <CardDescription>Benchmark targets used for dashboard progress and budgets</CardDescription>
+          </div>
+        </CardHeader>
 
-      <div className="space-y-5">
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-            Monthly Income
-          </label>
-
-          <input
+        <CardContent className="space-y-4 pt-4">
+          <Input
+            label="Monthly Income Target"
             type="number"
             name="monthlyIncome"
             value={monthlyIncome}
             onChange={onChange}
-            placeholder="Enter monthly income"
-            className="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
+            placeholder="e.g. 50000"
+            icon={DollarSign}
+            helperText="Estimated regular monthly income inflow"
           />
-        </div>
 
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-            Monthly Saving Goal
-          </label>
-
-          <input
+          <Input
+            label="Monthly Savings Target"
             type="number"
             name="monthlySavingGoal"
             value={monthlySavingGoal}
             onChange={onChange}
-            placeholder="Enter saving goal"
-            className="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
+            placeholder="e.g. 15000"
+            icon={Target}
+            helperText="Monthly net savings goal"
           />
-        </div>
-
-        <button
-          onClick={onSave}
-          disabled={loading}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 transition text-white font-medium py-3 rounded-xl disabled:opacity-60"
-        >
-          {loading ? "Saving..." : "Save Financial Goals"}
-        </button>
+        </CardContent>
       </div>
-    </div>
+
+      <div className="pt-4 border-t border-[#E8E7DE] flex justify-end">
+        <Button
+          onClick={onSave}
+          loading={loading}
+          className="w-full sm:w-auto px-6 h-11 shadow-sm"
+        >
+          <Save size={16} className="mr-2" />
+          <span>Save Financial Targets</span>
+        </Button>
+      </div>
+    </Card>
   );
 }
 

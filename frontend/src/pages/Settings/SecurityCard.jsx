@@ -1,5 +1,7 @@
-import { useState } from "react";
-import { LockKeyhole, Eye, EyeOff } from "lucide-react";
+import { LockKeyhole, KeyRound } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../components/ui/Card";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/Button";
 
 function SecurityCard({
   passwords,
@@ -7,92 +9,83 @@ function SecurityCard({
   onSave,
   loading,
 }) {
-  const [showPassword, setShowPassword] = useState({
-    current: false,
-    new: false,
-    confirm: false,
-  });
-
-  const toggleVisibility = (field) => {
-    setShowPassword((prev) => ({
-      ...prev,
-      [field]: !prev[field],
-    }));
-  };
-
-  const passwordFields = [
-    {
-      key: "currentPassword",
-      label: "Current Password",
-      visible: showPassword.current,
-      toggle: "current",
-    },
-    {
-      key: "newPassword",
-      label: "New Password",
-      visible: showPassword.new,
-      toggle: "new",
-    },
-    {
-      key: "confirmPassword",
-      label: "Confirm Password",
-      visible: showPassword.confirm,
-      toggle: "confirm",
-    },
-  ];
-
   return (
-    <div className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-sm p-6">
-      <div className="flex items-center gap-3 mb-6">
-        <LockKeyhole className="text-indigo-600" size={22} />
-        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-          Security
-        </h2>
-      </div>
+    <Card className="p-5 sm:p-6">
+      <CardHeader className="pb-4 border-b border-[#E8E7DE] dark:border-[#1E2D4A] mb-4">
+        <div>
+          <CardTitle className="flex items-center gap-2">
+            <LockKeyhole size={20} className="text-[#104E42] dark:text-[#00D09C]" />
+            <span>Security & Authentication</span>
+          </CardTitle>
+          <CardDescription className="mt-1 text-xs sm:text-sm text-[#66736E] dark:text-[#94A3B8]">
+            Update your account password. Must be at least 8 characters with uppercase, lowercase, number, and symbol.
+          </CardDescription>
+        </div>
+      </CardHeader>
 
-      <div className="space-y-5">
-        {passwordFields.map((field) => (
-          <div key={field.key}>
-            <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-              {field.label}
-            </label>
-
-            <div className="relative">
-              <input
-                type={field.visible ? "text" : "password"}
-                name={field.key}
-                value={passwords[field.key]}
-                onChange={onChange}
-                className="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 pr-12 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition"
-                placeholder={`Enter ${field.label.toLowerCase()}`}
-              />
-
-              <button
-                type="button"
-                onClick={() => toggleVisibility(field.toggle)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-indigo-600"
-              >
-                {field.visible ? (
-                  <EyeOff size={20} />
-                ) : (
-                  <Eye size={20} />
-                )}
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-
-      <div className="flex justify-end mt-8">
-        <button
-          onClick={onSave}
-          disabled={loading}
-          className="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-medium transition disabled:opacity-60"
+      <CardContent className="!p-0">
+        <form
+          autoComplete="off"
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSave();
+          }}
+          className="space-y-4"
         >
-          {loading ? "Updating..." : "Change Password"}
-        </button>
-      </div>
-    </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Input
+              label="Current Password"
+              type="password"
+              id="currentPassword"
+              name="currentPassword"
+              value={passwords.currentPassword}
+              onChange={onChange}
+              placeholder="Your existing password"
+              icon={KeyRound}
+              autoComplete="current-password"
+            />
+
+            <Input
+              label="New Password"
+              type="password"
+              id="newPassword"
+              name="newPassword"
+              value={passwords.newPassword}
+              onChange={onChange}
+              placeholder="Min 8 chars with Aa, 1, @"
+              icon={KeyRound}
+              autoComplete="new-password"
+            />
+
+            <Input
+              label="Confirm New Password"
+              type="password"
+              id="confirmPassword"
+              name="confirmPassword"
+              value={passwords.confirmPassword}
+              onChange={onChange}
+              placeholder="Re-enter new password"
+              icon={KeyRound}
+              autoComplete="new-password"
+            />
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-4 border-t border-[#E8E7DE] dark:border-[#1E2D4A]">
+            <p className="text-xs text-[#66736E] dark:text-[#94A3B8]">
+              For security, changing passwords will require your existing active password.
+            </p>
+
+            <Button
+              type="submit"
+              loading={loading}
+              className="w-full sm:w-auto px-6 h-11 shadow-sm"
+            >
+              <span>Update Password</span>
+            </Button>
+          </div>
+        </form>
+      </CardContent>
+    </Card>
   );
 }
 

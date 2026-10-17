@@ -27,6 +27,10 @@ import ProtectedRoute from "./ProtectedRoute";
 import PublicRoute from "./PublicRoute";
 
 import Settings from "../pages/Settings/Settings";
+import SplitExpenses from "../pages/SplitExpenses/SplitExpenses";
+import Budgets from "../pages/Budgets/Budgets";
+import AIAssistant from "../pages/AIAssistant/AIAssistant";
+import Notifications from "../pages/Notifications/Notifications";
 
 
 function AppRoutes() {
@@ -98,6 +102,26 @@ function AppRoutes() {
           path="/settings"
            element={<Settings />}
             />
+
+          <Route
+            path="/split-expenses"
+            element={<SplitExpenses />}
+          />
+
+          <Route
+            path="/budgets"
+            element={<Budgets />}
+          />
+
+          <Route
+            path="/notifications"
+            element={<Notifications />}
+          />
+
+          <Route
+            path="/ai-assistant"
+            element={<AIAssistant />}
+          />
 
         </Route>
       </Route>

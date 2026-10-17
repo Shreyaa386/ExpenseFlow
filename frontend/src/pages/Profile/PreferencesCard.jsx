@@ -1,3 +1,8 @@
+import { Sliders, Save } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../components/ui/Card";
+import Select from "../../components/ui/Select";
+import Button from "../../components/ui/Button";
+
 function PreferencesCard({
   language,
   currency,
@@ -5,56 +10,63 @@ function PreferencesCard({
   onSave,
   loading,
 }) {
+  const languageOptions = [
+    { value: "en", label: "English (en)" },
+    { value: "hi", label: "Hindi (hi)" },
+  ];
+
+  const currencyOptions = [
+    { value: "INR", label: "₹ INR (Indian Rupee)" },
+    { value: "USD", label: "$ USD (US Dollar)" },
+    { value: "EUR", label: "€ EUR (Euro)" },
+    { value: "GBP", label: "£ GBP (British Pound)" },
+  ];
+
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md border border-gray-200 dark:border-gray-800 p-6">
-      <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-        Preferences
-      </h2>
-
-      <div className="space-y-5">
+    <Card className="p-5 sm:p-6">
+      <CardHeader className="pb-3 border-b border-[#E8E7DE]">
         <div>
-          <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-            Language
-          </label>
+          <CardTitle className="flex items-center gap-2">
+            <Sliders size={20} className="text-[#104E42]" />
+            <span>Regional Preferences</span>
+          </CardTitle>
+          <CardDescription>
+            Display currency symbols and UI localization. (Formatting only; does not convert transaction numbers)
+          </CardDescription>
+        </div>
+      </CardHeader>
 
-          <select
+      <CardContent className="space-y-4 pt-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+          <Select
+            label="Language"
             name="language"
             value={language}
             onChange={onChange}
-            className="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
-          >
-            <option value="en">English</option>
-            <option value="hi">Hindi</option>
-          </select>
-        </div>
+            options={languageOptions}
+          />
 
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-            Currency
-          </label>
-
-          <select
+          <Select
+            label="Default Currency Symbol"
             name="currency"
             value={currency}
             onChange={onChange}
-            className="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
-          >
-            <option value="INR">₹ INR</option>
-            <option value="USD">$ USD</option>
-            <option value="EUR">€ EUR</option>
-            <option value="GBP">£ GBP</option>
-          </select>
+            options={currencyOptions}
+          />
         </div>
 
-        <button
-          onClick={onSave}
-          disabled={loading}
-          className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 transition-colors py-3 text-white font-medium disabled:opacity-60"
-        >
-          {loading ? "Saving..." : "Save Preferences"}
-        </button>
-      </div>
-    </div>
+        <div className="flex justify-end pt-4 border-t border-[#E8E7DE]">
+          <Button
+            onClick={onSave}
+            loading={loading}
+            className="w-full sm:w-auto px-6 h-11 shadow-sm"
+          >
+            <Save size={16} className="mr-2" />
+            <span>Save Preferences</span>
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 }
 

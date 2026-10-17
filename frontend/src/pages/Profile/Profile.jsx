@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import toast from "react-hot-toast";
 
 import ProfileHeader from "./ProfileHeader";
 import PersonalInfoCard from "./PersonalInfoCard";
 import FinancialGoalsCard from "./FinancialGoalsCard";
 import PreferencesCard from "./PreferencesCard";
+import { useAuth } from "../../context/AuthContext";
 
 import {
   getProfile,
@@ -13,6 +14,7 @@ import {
 } from "../../services/userService";
 
 function Profile() {
+  const { updateUser } = useAuth();
   const [loading, setLoading] = useState(false);
 
   const [profile, setProfile] = useState({
@@ -24,11 +26,7 @@ function Profile() {
     currency: "INR",
   });
 
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  const fetchProfile = async () => {
+  const fetchProfile = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -49,7 +47,11 @@ function Profile() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
 
   const handleChange = (e) => {
     setProfile((prev) => ({
@@ -62,11 +64,15 @@ function Profile() {
     try {
       setLoading(true);
 
-      await updateProfile({
+      const res = await updateProfile({
         name: profile.name,
         monthlyIncome: Number(profile.monthlyIncome),
         monthlySavingGoal: Number(profile.monthlySavingGoal),
       });
+
+      if (res?.data) {
+        updateUser(res.data);
+      }
 
       await fetchProfile();
 
@@ -83,10 +89,14 @@ function Profile() {
     try {
       setLoading(true);
 
-      await updatePreferences({
+      const res = await updatePreferences({
         language: profile.language,
         currency: profile.currency,
       });
+
+      if (res?.data) {
+        updateUser(res.data);
+      }
 
       await fetchProfile();
 
@@ -100,7 +110,7 @@ function Profile() {
   };
 
   return (
-    <div className="px-6 pb-6 space-y-8">
+    <div className="space-y-6 sm:space-y-7">
       <ProfileHeader
         name={profile.name}
         email={profile.email}
@@ -108,7 +118,7 @@ function Profile() {
         currency={profile.currency}
       />
 
-      <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <PersonalInfoCard
           name={profile.name}
           email={profile.email}
@@ -125,7 +135,7 @@ function Profile() {
           loading={loading}
         />
 
-        <div className="xl:col-span-2">
+        <div className="lg:col-span-2">
           <PreferencesCard
             language={profile.language}
             currency={profile.currency}

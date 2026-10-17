@@ -1,227 +1,188 @@
 import { useEffect, useState } from "react";
-import { X, Tag, Wallet } from "lucide-react";
-import { categoryIcons } from "../../constants/categoryIcons";
+import { Tag, Wallet } from "lucide-react";
+import Modal from "../../components/ui/Modal";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/Button";
+import { categoryIcons, getCategoryIconMeta } from "../../constants/categoryIcons";
 
-function AddCategoryModal({ open, onClose, onSave }) {
+function AddCategoryModal({
+  open,
+  onClose,
+  onSave,
+  category = null,
+  loading = false,
+}) {
   const [name, setName] = useState("");
   const [type, setType] = useState("Expense");
   const [selectedIcon, setSelectedIcon] = useState(categoryIcons[0]);
 
   useEffect(() => {
-    const handleEscape = (e) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
-    };
-
-    window.addEventListener("keydown", handleEscape);
-
-    return () => window.removeEventListener("keydown", handleEscape);
-  }, [onClose]);
+    if (category) {
+      setName(category.name || "");
+      setType(
+        category.type && category.type.toLowerCase() === "income"
+          ? "Income"
+          : "Expense"
+      );
+      setSelectedIcon(getCategoryIconMeta(category.icon || category.name));
+    } else {
+      setName("");
+      setType("Expense");
+      setSelectedIcon(categoryIcons[0]);
+    }
+  }, [category, open]);
 
   if (!open) return null;
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (!name.trim()) return;
 
     onSave?.({
-      name,
+      name: name.trim(),
       type,
-      icon: selectedIcon.icon,
+      icon: selectedIcon.name || selectedIcon.label,
       color: selectedIcon.color,
       bg: selectedIcon.bg,
     });
-
-    setName("");
-    setType("Expense");
-    setSelectedIcon(categoryIcons[0]);
-    onClose();
   };
 
   const PreviewIcon = selectedIcon.icon;
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
-      onClick={onClose}
+    <Modal
+      isOpen={open}
+      onClose={onClose}
+      title={category ? "Edit Category" : "Create New Category"}
+      description={
+        category
+          ? "Modify category parameters or visual classification."
+          : "Add a custom spending or revenue category to your ledger."
+      }
+      maxWidth="max-w-xl"
     >
-      <div
-        className="w-full max-w-2xl rounded-3xl border border-slate-800 bg-[#0F172A] p-8 shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        {/* Header */}
-
-        <div className="mb-8 flex items-center justify-between">
-          <div>
-            <h2 className="text-2xl font-bold text-white">
-              Add Category
-            </h2>
-
-            <p className="mt-1 text-sm text-slate-400">
-              Create a new category.
-            </p>
-          </div>
-
-          <button
-            onClick={onClose}
-            className="rounded-xl p-2 text-slate-400 transition hover:bg-slate-800 hover:text-white"
-          >
-            <X size={20} />
-          </button>
-        </div>
-
+      <form onSubmit={handleSubmit} className="space-y-6">
         {/* Category Name */}
-
-        <div className="mb-6">
-          <label className="mb-2 flex items-center gap-2 text-sm font-medium text-slate-300">
-            <Tag size={16} />
-            Category Name
-          </label>
-
-          <input
-            type="text"
-            placeholder="Enter category name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="h-12 w-full rounded-xl border border-slate-700 bg-slate-900 px-4 text-white placeholder:text-slate-500 outline-none transition focus:border-indigo-500"
-          />
-        </div>
+        <Input
+          label="Category Name"
+          placeholder="e.g. Subscriptions, Groceries, Dividends"
+          icon={Tag}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
 
         {/* Category Type */}
-
-        <div className="mb-8">
-          <label className="mb-3 flex items-center gap-2 text-sm font-medium text-slate-300">
-            <Wallet size={16} />
-            Category Type
+        <div className="space-y-1.5">
+          <label className="flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#102A2A]">
+            <Wallet size={14} className="text-[#087F68]" />
+            <span>Category Flow Type</span>
           </label>
 
-          <div className="flex gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <button
               type="button"
               onClick={() => setType("Expense")}
-              className={`flex-1 rounded-xl py-3 transition ${
+              className={`flex items-center justify-center gap-2 rounded-xl h-11 text-xs font-bold transition cursor-pointer ${
                 type === "Expense"
-                  ? "bg-red-500 text-white"
-                  : "border border-slate-700 bg-slate-900 text-slate-400"
+                  ? "border border-[#D9573B]/50 bg-[#D9573B]/10 text-[#D9573B] ring-1 ring-[#D9573B]/30 shadow-sm"
+                  : "border border-[#E8E7DE] bg-[#F8F7F0] text-[#66736E] hover:text-[#102A2A] hover:bg-[#FFFDF8]"
               }`}
             >
-              Expense
+              <span>Expense (Debit)</span>
             </button>
 
             <button
               type="button"
               onClick={() => setType("Income")}
-              className={`flex-1 rounded-xl py-3 transition ${
+              className={`flex items-center justify-center gap-2 rounded-xl h-11 text-xs font-bold transition cursor-pointer ${
                 type === "Income"
-                  ? "bg-emerald-500 text-white"
-                  : "border border-slate-700 bg-slate-900 text-slate-400"
+                  ? "border border-[#3F8F46]/50 bg-[#3F8F46]/10 text-[#3F8F46] ring-1 ring-[#3F8F46]/30 shadow-sm"
+                  : "border border-[#E8E7DE] bg-[#F8F7F0] text-[#66736E] hover:text-[#102A2A] hover:bg-[#FFFDF8]"
               }`}
             >
-              Income
+              <span>Income (Credit)</span>
             </button>
           </div>
         </div>
 
-        {/* Icon Picker */}
-
-        <div className="mb-8">
-          <label className="mb-4 text-sm font-medium text-slate-300">
-            Choose Icon
+        {/* Icon Selector Grid */}
+        <div className="space-y-2">
+          <label className="block text-xs font-bold uppercase tracking-wider text-[#102A2A]">
+            Visual Icon & Accent
           </label>
 
-          <div className="grid grid-cols-4 gap-3">
+          <div className="grid grid-cols-4 sm:grid-cols-6 gap-2.5 max-h-44 overflow-y-auto p-1.5 rounded-xl bg-[#F8F7F0] border border-[#E8E7DE]">
             {categoryIcons.map((item) => {
               const Icon = item.icon;
+              const isSelected = selectedIcon.label === item.label;
 
               return (
                 <button
                   key={item.label}
                   type="button"
                   onClick={() => setSelectedIcon(item)}
-                  className={`rounded-2xl border p-4 transition-all duration-200 ${
-                    selectedIcon.label === item.label
-                      ? "border-indigo-500 bg-indigo-500/20"
-                      : "border-slate-700 bg-slate-900 hover:border-slate-500"
+                  className={`flex flex-col items-center justify-center rounded-xl p-2.5 transition cursor-pointer ${
+                    isSelected
+                      ? "border border-[#104E42] bg-[#104E42]/10 ring-1 ring-[#104E42] text-[#104E42] shadow-sm font-semibold"
+                      : "border border-[#E8E7DE] bg-[#FFFDF8] hover:border-[#D5D3C8]"
                   }`}
                 >
-                  <div
-                    className={`mx-auto mb-2 flex h-12 w-12 items-center justify-center rounded-xl ${item.bg}`}
-                  >
-                    <Icon className={item.color} size={22} />
-                  </div>
-
-                  <p className="text-xs text-slate-300">
+                  <Icon size={20} className={item.color} />
+                  <span className="mt-1 text-xs text-[#66736E] truncate w-full text-center">
                     {item.label}
-                  </p>
+                  </span>
                 </button>
               );
             })}
           </div>
         </div>
 
-        {/* Live Preview */}
+        {/* Live Preview Card */}
+        <div className="rounded-2xl border border-[#E8E7DE] bg-[#F8F7F0] p-4 flex items-center gap-4">
+          <div
+            className={`flex h-12 w-12 items-center justify-center rounded-xl ${selectedIcon.bg} border border-[#E8E7DE]`}
+          >
+            <PreviewIcon size={22} className={selectedIcon.color} />
+          </div>
 
-        <div className="mb-8">
-          <label className="mb-4 block text-sm font-medium text-slate-300">
-            Preview
-          </label>
-
-          <div className="rounded-2xl border border-slate-700 bg-slate-900 p-5">
-            <div
-              className={`mb-4 flex h-14 w-14 items-center justify-center rounded-2xl ${selectedIcon.bg}`}
-            >
-              <PreviewIcon
-                size={26}
-                className={selectedIcon.color}
-              />
-            </div>
-
-            <h3 className="text-lg font-semibold text-white">
-              {name || "Category Name"}
-            </h3>
-
-            <p
-              className={`mt-1 text-sm ${
-                type === "Expense"
-                  ? "text-red-400"
-                  : "text-emerald-400"
+          <div className="flex-1 min-w-0">
+            <h4 className="truncate text-sm font-bold text-[#102A2A]">
+              {name || "Category Preview"}
+            </h4>
+            <span
+              className={`text-xs font-semibold ${
+                type === "Expense" ? "text-[#D9573B]" : "text-[#3F8F46]"
               }`}
             >
-              {type}
-            </p>
-
-            <div className="mt-5 flex items-center justify-between border-t border-slate-700 pt-4">
-  <span className="text-sm text-slate-400">
-    Transactions
-  </span>
-
-  <span className="rounded-full bg-slate-800 px-3 py-1 text-sm font-semibold text-white">
-    0
-  </span>
-</div>
+              {type} Allocation
+            </span>
           </div>
         </div>
 
-        {/* Footer */}
-
-        <div className="flex justify-end gap-3">
-          <button
+        {/* Modal Actions */}
+        <div className="flex items-center justify-end gap-3 pt-4 border-t border-[#E8E7DE]">
+          <Button
+            type="button"
+            variant="outline"
             onClick={onClose}
-            className="rounded-xl border border-slate-700 px-5 py-3 text-slate-300 transition hover:bg-slate-800"
+            disabled={loading}
+            className="px-5 h-11"
           >
             Cancel
-          </button>
+          </Button>
 
-          <button
+          <Button
+            type="submit"
+            loading={loading}
             disabled={!name.trim()}
-            onClick={handleSubmit}
-            className="rounded-xl bg-indigo-600 px-6 py-3 font-medium text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-50"
+            className="px-6 h-11 shadow-sm"
           >
-            Save Category
-          </button>
+            {category ? "Update Category" : "Save Category"}
+          </Button>
         </div>
-      </div>
-    </div>
+      </form>
+    </Modal>
   );
 }
 

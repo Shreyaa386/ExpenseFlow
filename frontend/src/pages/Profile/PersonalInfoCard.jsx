@@ -1,54 +1,57 @@
+import { User, Mail, Save } from "lucide-react";
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../../components/ui/Card";
+import Input from "../../components/ui/Input";
+import Button from "../../components/ui/Button";
+
 function PersonalInfoCard({
   name,
   email,
   onChange,
   onSave,
- loading,
+  loading,
 }) {
   return (
-    <div className="bg-white dark:bg-gray-900 rounded-2xl shadow-md border border-gray-200 dark:border-gray-800 p-6">
-      <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-6">
-        Personal Information
-      </h2>
+    <Card className="p-5 sm:p-6 flex flex-col justify-between h-full">
+      <div>
+        <CardHeader className="pb-3 border-b border-[#E8E7DE]">
+          <div>
+            <CardTitle>Personal Information</CardTitle>
+            <CardDescription>Your public profile name and system credentials</CardDescription>
+          </div>
+        </CardHeader>
 
-      <div className="space-y-5">
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-            Full Name
-          </label>
-
-          <input
-            type="text"
+        <CardContent className="space-y-4 pt-4">
+          <Input
+            label="Full Name"
             name="name"
             value={name}
             onChange={onChange}
             placeholder="Enter your name"
-            className="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-800 px-4 py-3 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none"
+            icon={User}
           />
-        </div>
 
-        <div>
-          <label className="block mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
-            Email Address
-          </label>
-
-          <input
-            type="email"
+          <Input
+            label="Email Address"
             value={email}
             readOnly
-            className="w-full rounded-xl border border-gray-300 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 px-4 py-3 text-gray-500 dark:text-gray-400 cursor-not-allowed"
+            icon={Mail}
+            helperText="Email cannot be changed directly for account security"
+            className="cursor-not-allowed opacity-75"
           />
-        </div>
-
-        <button
-          onClick={onSave}
-          disabled={loading}
-          className="w-full rounded-xl bg-indigo-600 hover:bg-indigo-700 transition-colors py-3 text-white font-medium disabled:opacity-60 disabled:cursor-not-allowed"
-        >
-          {loading ? "Saving..." : "Save Personal Information"}
-        </button>
+        </CardContent>
       </div>
-    </div>
+
+      <div className="pt-4 border-t border-[#E8E7DE] flex justify-end">
+        <Button
+          onClick={onSave}
+          loading={loading}
+          className="w-full sm:w-auto px-6 h-11 shadow-sm"
+        >
+          <Save size={16} className="mr-2" />
+          <span>Save Personal Information</span>
+        </Button>
+      </div>
+    </Card>
   );
 }
 

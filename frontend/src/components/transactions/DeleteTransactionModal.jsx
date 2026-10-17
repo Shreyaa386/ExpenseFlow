@@ -1,5 +1,6 @@
-import Card from "../ui/Card";
+import Modal from "../ui/Modal";
 import Button from "../ui/Button";
+import { AlertTriangle } from "lucide-react";
 
 function DeleteTransactionModal({
   isOpen,
@@ -7,44 +8,46 @@ function DeleteTransactionModal({
   onConfirm,
   loading = false,
 }) {
-  if (!isOpen) return null;
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
-      <Card className="w-full max-w-md p-8">
-        <h2 className="text-2xl font-bold text-white">
-          Delete Transaction
-        </h2>
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      title="Delete Transaction"
+      description="Verify deletion before permanent removal from ledger."
+      maxWidth="max-w-md"
+    >
+      <div className="space-y-4">
+        <div className="rounded-2xl border border-[#D9573B]/30 bg-[#D9573B]/10 p-4 flex items-start gap-3">
+          <AlertTriangle size={20} className="text-[#D9573B] shrink-0 mt-0.5" />
+          <div className="text-xs text-[#D9573B] leading-relaxed">
+            <p className="font-bold text-[#D9573B]">Irreversible Action</p>
+            <p className="mt-1 text-[#66736E]">
+              Are you sure you want to delete this transaction? This entry will be permanently removed from your historical ledger.
+            </p>
+          </div>
+        </div>
 
-        <p className="mt-4 text-slate-400">
-          Are you sure you want to delete this transaction?
-        </p>
-
-        <p className="mt-2 text-sm text-red-400">
-          This action cannot be undone.
-        </p>
-
-        <div className="mt-8 flex gap-4">
+        <div className="flex items-center justify-end gap-3 pt-3 border-t border-[#E8E7DE]">
           <Button
             type="button"
+            variant="outline"
             onClick={onClose}
             disabled={loading}
-            className="bg-slate-700 hover:bg-slate-600"
           >
             Cancel
           </Button>
 
           <Button
             type="button"
+            variant="danger"
             onClick={onConfirm}
             loading={loading}
-            className="bg-red-600 hover:bg-red-700"
           >
-            Delete
+            Confirm Delete
           </Button>
         </div>
-      </Card>
-    </div>
+      </div>
+    </Modal>
   );
 }
 

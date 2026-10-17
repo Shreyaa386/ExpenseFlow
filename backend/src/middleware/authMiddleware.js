@@ -15,19 +15,8 @@ const protect = async (req, res, next) => {
       });
     }
 
-    console.log("==================================");
-    console.log("Authorization Header:");
-    console.log(req.headers.authorization);
-
     const decoded = jwt.verify(token, config.JWT_SECRET);
-
-    console.log("Decoded Token:");
-    console.log(decoded);
-
     const user = await User.findById(decoded.id);
-
-    console.log("User Found:");
-    console.log(user);
 
     if (!user) {
       return res.status(401).json({
