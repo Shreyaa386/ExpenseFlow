@@ -1,8 +1,10 @@
+/* eslint-disable react-refresh/only-export-components */
 import {
   createContext,
   useContext,
   useEffect,
   useState,
+  useCallback,
 } from "react";
 
 import { getTransactions } from "../services/transactionService";
@@ -16,16 +18,17 @@ export function TransactionProvider({ children }) {
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchTransactions = async () => {
+  const fetchTransactions = useCallback(async () => {
     try {
+      setLoading(true);
       const data = await getTransactions();
-      setTransactions(data);
+      setTransactions(data || []);
     } catch (error) {
       console.error("Failed to fetch transactions", error);
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     if (authLoading) return;
@@ -33,10 +36,12 @@ export function TransactionProvider({ children }) {
     if (isAuthenticated) {
       fetchTransactions();
     } else {
-      setTransactions([]);
-      setLoading(false);
+      queueMicrotask(() => {
+        setTransactions([]);
+        setLoading(false);
+      });
     }
-  }, [isAuthenticated, authLoading]);
+  }, [isAuthenticated, authLoading, fetchTransactions]);
 
   return (
     <TransactionContext.Provider

@@ -1,5 +1,6 @@
 const Transaction = require("../models/Transaction");
 const { transactionSchema } = require("../validators/transactionValidator");
+const { checkBudgetThresholds } = require("../utils/budgetAlertHelper");
 
 // ==========================
 // Add Transaction
@@ -35,6 +36,13 @@ const addTransaction = async (req, res) => {
       account,
       user: req.user._id,
     });
+
+    // Check budget thresholds if an expense was added
+    if (type === "expense") {
+      checkBudgetThresholds(req.user._id).catch((err) =>
+        console.error("Budget check error:", err)
+      );
+    }
 
     return res.status(201).json({
       success: true,
@@ -139,6 +147,10 @@ const updateTransaction = async (req, res) => {
       });
     }
 
+    checkBudgetThresholds(req.user._id).catch((err) =>
+      console.error("Budget check error:", err)
+    );
+
     return res.status(200).json({
       success: true,
       message: "Transaction updated successfully.",
@@ -168,6 +180,10 @@ const deleteTransaction = async (req, res) => {
         message: "Transaction not found.",
       });
     }
+
+    checkBudgetThresholds(req.user._id).catch((err) =>
+      console.error("Budget check error:", err)
+    );
 
     return res.status(200).json({
       success: true,

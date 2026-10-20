@@ -1,9 +1,73 @@
 @import "tailwindcss";
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-warm-bg: #F8F7F0;
+  --color-warm-surface: #FFFDF8;
+  --color-forest-sidebar: #104E42;
+  --color-forest-secondary: #176453;
+  --color-forest-text: #102A2A;
+  --color-forest-muted: #66736E;
+  --color-warm-accent: #D99016;
+  --color-teal-accent: #087F68;
+  --color-fintech-success: #3F8F46;
+  --color-fintech-warning: #E69A20;
+  --color-fintech-danger: #D9573B;
+  --color-warm-border: #E8E7DE;
+}
+
+:root {
+  --app-bg: #F8F7F0;
+  --app-text: #102A2A;
+  --surface-card: #FFFDF8;
+  --surface-elevated: #FFFFFF;
+  --surface-subtle: #F8F7F0;
+  --surface-hover: #F3F1E7;
+  --sidebar-bg: #104E42;
+  --sidebar-secondary: #176453;
+  --sidebar-border: rgba(23, 100, 83, 0.4);
+  --header-bg: #FFFDF8;
+  --header-border: #E8E7DE;
+  --border-color: #E8E7DE;
+  --border-hover: #D5D3C8;
+  --text-main: #102A2A;
+  --text-muted: #66736E;
+  --accent-teal: #087F68;
+  --accent-mustard: #D99016;
+  --accent-danger: #D9573B;
+  --accent-success: #3F8F46;
+  color-scheme: light;
+}
+
+html.dark,
+[data-theme="dark"] {
+  --app-bg: #0B1329;
+  --app-text: #F8FAFC;
+  --surface-card: #111C38;
+  --surface-elevated: #162447;
+  --surface-subtle: #0E172F;
+  --surface-hover: #162447;
+  --sidebar-bg: #070D1E;
+  --sidebar-secondary: #0E172F;
+  --sidebar-border: #1E2D4A;
+  --header-bg: #111C38;
+  --header-border: #1E2D4A;
+  --border-color: #1E2D4A;
+  --border-hover: #2E4369;
+  --text-main: #F8FAFC;
+  --text-muted: #94A3B8;
+  --accent-teal: #00D09C;
+  --accent-mustard: #F59E0B;
+  --accent-danger: #EF4444;
+  --accent-success: #10B981;
+  color-scheme: dark;
+}
+
+@layer base {
+  *, ::before, ::after {
+    box-sizing: border-box;
+  }
 }
 
 html,
@@ -11,10 +75,192 @@ body,
 #root {
   width: 100%;
   min-height: 100vh;
+  background-color: var(--app-bg);
+  color: var(--app-text);
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 body {
-  font-family: "Inter", sans-serif;
-  background: #020617;
-  color: #ffffff;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 550px;
+  padding: 44px;
+  box-sizing: border-box;
+  border-radius: 28px;
+}
+
+@media (max-width: 640px) {
+  .auth-card {
+    padding: 24px;
+    border-radius: 22px;
+  }
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--app-bg);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-hover);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Card & Surface Utilities */
+.warm-card {
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04), 0 1px 2px -1px rgba(0, 0, 0, 0.03);
+}
+
+.warm-card-hover {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.warm-card-hover:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.08), 0 2px 4px -2px rgba(0, 0, 0, 0.04);
+}
+
+.glass-panel {
+  background: var(--surface-card);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.04);
+}
+
+.glass-card {
+  background: var(--surface-card);
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.05);
+}
+
+.glass-card-hover {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card-hover:hover {
+  border-color: var(--border-hover);
+  box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.1);
+}
+
+/* ==========================================================================
+   GLOBAL DARK FINTECH OVERRIDES FOR SHARED LEGACY ARBITRARY CLASSES
+   ========================================================================== */
+
+html.dark body,
+html.dark #root {
+  background-color: var(--app-bg) !important;
+  color: var(--app-text) !important;
+}
+
+/* Page backgrounds */
+html.dark main,
+html.dark .min-h-screen.bg-\[\#F8F7F0\],
+html.dark .min-h-screen.bg-\[\#F7F5EE\],
+html.dark div.bg-\[\#F8F7F0\].flex-1,
+html.dark div.bg-\[\#F8F7F0\].overflow-hidden {
+  background-color: var(--app-bg) !important;
+}
+
+/* Card surfaces & panels */
+html.dark .bg-\[\#FFFDF8\],
+html.dark .bg-\[\#FFFDF6\],
+html.dark .bg-white:not(button.bg-white):not(.badge-dot) {
+  background-color: var(--surface-card) !important;
+}
+
+/* Elevated overlays, modals, and dropdowns */
+html.dark .z-50 .bg-\[\#FFFDF8\],
+html.dark .fixed .bg-\[\#FFFDF8\],
+html.dark [role="dialog"] .bg-\[\#FFFDF8\],
+html.dark .modal-card {
+  background-color: var(--surface-elevated) !important;
+}
+
+/* Subtle surfaces (Table headers, filter tabs, secondary container items) */
+html.dark thead.bg-\[\#F8F7F0\],
+html.dark th.bg-\[\#F8F7F0\],
+html.dark .bg-\[\#F8F7F0\]\/60,
+html.dark .bg-\[\#F8F7F0\]\/80,
+html.dark div.bg-\[\#F8F7F0\]:not(main):not(.min-h-screen):not(.flex-1),
+html.dark span.bg-\[\#F8F7F0\],
+html.dark button.bg-\[\#F8F7F0\]:not(.active-tab) {
+  background-color: var(--surface-subtle) !important;
+}
+
+/* Primary text (Headings, titles, data values) */
+html.dark .text-\[\#102A2A\] {
+  color: var(--text-main) !important;
+}
+
+/* Secondary muted text (subtitles, labels, helpers, timestamps) */
+html.dark .text-\[\#66736E\] {
+  color: var(--text-muted) !important;
+}
+
+/* Borders */
+html.dark .border-\[\#E8E7DE\],
+html.dark .border-\[\#E8E5D8\],
+html.dark .border-\[\#E5E2D4\],
+html.dark .border-\[\#DCD8CA\] {
+  border-color: var(--border-color) !important;
+}
+
+html.dark .divide-\[\#E8E7DE\] > :not([hidden]) ~ :not([hidden]),
+html.dark .divide-\[\#E8E7DE\]\/50 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--border-color) !important;
+}
+
+/* Hover borders */
+html.dark .hover\:border-\[\#D5D3C8\]:hover {
+  border-color: var(--border-hover) !important;
+}
+
+/* Hover backgrounds */
+html.dark .hover\:bg-\[\#F8F7F0\]:hover,
+html.dark .hover\:bg-\[\#F3F1E7\]:hover,
+html.dark .hover\:bg-\[\#F2EFE6\]:hover,
+html.dark .hover\:bg-\[\#E8E7DE\]:hover {
+  background-color: var(--surface-hover) !important;
+}
+
+/* Input / Select / Textarea inputs in Dark Fintech */
+html.dark input,
+html.dark select,
+html.dark textarea {
+  color: var(--text-main) !important;
+}
+
+html.dark input::placeholder,
+html.dark textarea::placeholder {
+  color: rgba(148, 163, 184, 0.6) !important;
+}
+
+html.dark select option {
+  background-color: var(--surface-card) !important;
+  color: var(--text-main) !important;
+}
+
+/* Dark mode icon highlights for dark forest green icons (e.g. Palette, Globe, Key) */
+html.dark .text-\[\#104E42\]:not(button.bg-\[\#104E42\]):not(.btn-primary) {
+  color: #00D09C !important;
+}
+
+html.dark .bg-\[\#104E42\]\/10 {
+  background-color: rgba(0, 208, 156, 0.12) !important;
 }

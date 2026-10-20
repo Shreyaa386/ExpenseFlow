@@ -16,7 +16,6 @@ const protect = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, config.JWT_SECRET);
-
     const user = await User.findById(decoded.id);
 
     if (!user) {
@@ -30,6 +29,9 @@ const protect = async (req, res, next) => {
 
     next();
   } catch (error) {
+    console.error("AUTH ERROR:");
+    console.error(error);
+
     return res.status(401).json({
       success: false,
       message: "Unauthorized. Please login again.",

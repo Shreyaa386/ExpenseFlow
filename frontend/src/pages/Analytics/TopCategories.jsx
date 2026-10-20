@@ -1,120 +1,120 @@
 import { useMemo } from "react";
-import {
-  Utensils,
-  ShoppingBag,
-  Car,
-  HeartPulse,
-  Wallet,
-  Landmark,
-  CircleDollarSign,
-} from "lucide-react";
+import Card, { CardHeader, CardTitle } from "../../components/ui/Card";
+import { getCategoryIconMeta } from "../../constants/categoryIcons";
 
-const iconMap = {
-  Food: Utensils,
-  Shopping: ShoppingBag,
-  Travel: Car,
-  Health: HeartPulse,
-  Bills: Landmark,
-  Salary: CircleDollarSign,
-};
-
-const colorMap = {
-  Food: {
-    bg: "bg-orange-500/15",
-    text: "text-orange-400",
-  },
-  Shopping: {
-    bg: "bg-pink-500/15",
-    text: "text-pink-400",
-  },
-  Travel: {
-    bg: "bg-blue-500/15",
-    text: "text-blue-400",
-  },
-  Health: {
-    bg: "bg-red-500/15",
-    text: "text-red-400",
-  },
-  Bills: {
-    bg: "bg-indigo-500/15",
-    text: "text-indigo-400",
-  },
-  Salary: {
-    bg: "bg-emerald-500/15",
-    text: "text-emerald-400",
-  },
-};
-
-function TopCategories({ transactions }) {
-  const categories = useMemo(() => {
+function TopCategories({ transactions = [] }) {
+  const { categories, totalExpense } = useMemo(() => {
     const categoryMap = {};
+    let total = 0;
 
     transactions.forEach((transaction) => {
       if (transaction.type !== "expense") return;
 
       const category = transaction.category || "Other";
-
-      categoryMap[category] =
-        (categoryMap[category] || 0) + Number(transaction.amount);
+      const amt = Number(transaction.amount) || 0;
+      if (!categoryMap[category]) {
+        categoryMap[category] = { count: 0, amount: 0 };
+      }
+      categoryMap[category].count += 1;
+      categoryMap[category].amount += amt;
+      total += amt;
     });
 
-    return Object.entries(categoryMap)
-      .map(([name, amount]) => ({
+    const list = Object.entries(categoryMap)
+      .map(([name, data]) => ({
         name,
-        amount,
+        amount: data.amount,
+        count: data.count,
+        percentage: total > 0 ? Math.round((data.amount / total) * 100) : 0,
       }))
       .sort((a, b) => b.amount - a.amount);
+
+    return { categories: list, totalExpense: total };
   }, [transactions]);
 
+  if (categories.length === 0) {
+    return (
+      <Card className="p-6">
+        <CardHeader className="pb-4">
+          <div>
+            <CardTitle>Top Spending Classifications</CardTitle>
+            <p className="mt-1 text-xs text-[#66736E]">
+              Ranked outflow volume by category.
+            </p>
+          </div>
+        </CardHeader>
+        <div className="py-10 text-center text-xs text-[#66736E]">
+          No expenditure categories recorded in this timeframe.
+        </div>
+      </Card>
+    );
+  }
+
   return (
-    <div className="rounded-3xl border border-slate-800 bg-slate-900 p-6">
-      <h2 className="mb-6 text-xl font-semibold text-white">
-        Top Spending Categories
-      </h2>
+    <Card className="p-6">
+      <CardHeader className="flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-6">
+        <div>
+          <CardTitle>Top Spending Classifications</CardTitle>
+          <p className="mt-1 text-xs text-[#66736E]">
+            Hierarchical analysis of expenditure drivers.
+          </p>
+        </div>
+
+        <span className="text-xs text-[#66736E] font-medium">
+          Total Analyzed Outflow: <strong className="text-[#102A2A] font-mono">₹{totalExpense.toLocaleString()}</strong>
+        </span>
+      </CardHeader>
 
       <div className="space-y-4">
         {categories.map((category) => {
-          const Icon = iconMap[category.name] || Wallet;
-
-          const colors = colorMap[category.name] || {
-            bg: "bg-slate-700",
-            text: "text-slate-300",
-          };
+          const meta = getCategoryIconMeta(category.name);
+          const Icon = meta.icon;
 
           return (
             <div
               key={category.name}
-              className="flex items-center justify-between rounded-2xl border border-slate-800 bg-slate-950 p-4 transition hover:border-indigo-500/40"
+              className="rounded-2xl border border-[#E8E7DE] bg-[#F8F7F0] p-4 transition hover:border-[#D5D3C8]"
             >
-              <div className="flex items-center gap-4">
-                <div
-                  className={`flex h-12 w-12 items-center justify-center rounded-xl ${colors.bg}`}
-                >
-                  <Icon
-                    size={22}
-                    className={colors.text}
-                  />
+              <div className="flex items-center justify-between gap-4">
+                <div className="flex items-center gap-3.5 min-w-0">
+                  <div
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-[#E8E7DE] ${meta.bg}`}
+                  >
+                    <Icon size={20} className={meta.color} />
+                  </div>
+
+                  <div className="min-w-0">
+                    <h4 className="truncate font-bold text-[#102A2A] text-sm">
+                      {category.name}
+                    </h4>
+                    <p className="text-xs text-[#66736E] mt-0.5">
+                      {category.count} transaction{category.count === 1 ? "" : "s"}
+                    </p>
+                  </div>
                 </div>
 
-                <div>
-                  <h3 className="font-semibold text-white">
-                    {category.name}
-                  </h3>
-
-                  <p className="text-sm text-slate-400">
-                    Total Spending
-                  </p>
+                <div className="text-right shrink-0">
+                  <span className="text-sm sm:text-base font-bold text-[#102A2A] font-mono">
+                    ₹{category.amount.toLocaleString("en-IN")}
+                  </span>
+                  <span className="block text-xs text-[#087F68] font-mono font-medium">
+                    {category.percentage}% of total
+                  </span>
                 </div>
               </div>
 
-              <span className="text-lg font-bold text-white">
-                ₹{category.amount.toLocaleString("en-IN")}
-              </span>
+              {/* Proportional Progress Bar */}
+              <div className="mt-3 h-1.5 w-full overflow-hidden rounded-full bg-[#E8E7DE]">
+                <div
+                  className="h-full rounded-full bg-[#087F68] transition-all duration-500"
+                  style={{ width: `${category.percentage}%` }}
+                />
+              </div>
             </div>
           );
         })}
       </div>
-    </div>
+    </Card>
   );
 }
 
